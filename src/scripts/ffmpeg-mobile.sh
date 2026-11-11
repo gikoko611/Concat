@@ -76,11 +76,11 @@ case "$target" in
     # The x86_64 build is the one CI's emulators can run, never shipped:
     # FFmpeg's hand-written assembly is left out there, so the build needs
     # no assembler, and its speed is nobody's concern.
-    if [ "$target" = aarch64-linux-android ]; then
-      arch=(--arch=aarch64 --cpu=armv8-a)
-    else
-      arch=(--arch=x86_64 --disable-x86asm)
-    fi
+    case "$target" in
+      aarch64-linux-android) arch=(--arch=aarch64 --cpu=armv8-a) ;;
+      armv7-linux-androideabi) arch=(--arch=arm --cpu=armv7-a --enable-neon) ;;
+      x86_64-linux-android) arch=(--arch=x86_64 --disable-x86asm) ;;
+    esac
     (cd "$build" && "$src/configure" "${common[@]}" \
       --target-os=android "${arch[@]}" \
       --sysroot="$ndk/toolchains/llvm/prebuilt/$host_tag/sysroot" \
