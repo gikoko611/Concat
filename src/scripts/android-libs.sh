@@ -46,7 +46,7 @@ lib_target=$target
 cp "$ndk/toolchains/llvm/prebuilt/$host_tag/sysroot/usr/lib/$lib_target/libc++_shared.so" \
   "$out/$abi/"
 
-if [ "$abi" = x86_64 ] || [ "$abi" = armeabi-v7a ]; then
+if true; then
   scratch=$(mktemp -d)
   trap 'rm -rf "$scratch"' EXIT
   "$root/scripts/ci/fetch.sh" onnxruntime-android "$scratch/onnxruntime-android.aar"
