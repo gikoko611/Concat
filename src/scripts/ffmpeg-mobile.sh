@@ -84,8 +84,8 @@ case "$target" in
     (cd "$build" && "$src/configure" "${common[@]}" \
       --target-os=android "${arch[@]}" \
       --sysroot="$ndk/toolchains/llvm/prebuilt/$host_tag/sysroot" \
-      --cc="$bin/$target$android_api-clang" \
-      --cxx="$bin/$target$android_api-clang++" \
+      --cc="$bin/${target/armv7-linux-androideabi/armv7a-linux-androideabi}$android_api-clang" \
+      --cxx="$bin/${target/armv7-linux-androideabi/armv7a-linux-androideabi}$android_api-clang++" \
       --ar="$bin/llvm-ar" --nm="$bin/llvm-nm" --ranlib="$bin/llvm-ranlib" --strip="$bin/llvm-strip" \
       --enable-jni --enable-mediacodec \
       --extra-cflags="-fno-omit-frame-pointer" \
