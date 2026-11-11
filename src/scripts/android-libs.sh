@@ -17,12 +17,13 @@
 # cargo-apk packages the whole tree through concat-android's manifest.
 set -euo pipefail
 
-target=${1:?target triple: aarch64-linux-android or x86_64-linux-android}
+target=${1:?target triple: armv7-linux-androideabi, aarch64-linux-android or x86_64-linux-android}
 workspace=$(cd "$(dirname "$0")/.." && pwd)
 root=$(cd "$workspace/.." && pwd)
 out=${2:-$workspace/vendor/android/jniLibs}
 
 case "$target" in
+  armv7-linux-androideabi) abi=armeabi-v7a ;;
   aarch64-linux-android) abi=arm64-v8a ;;
   x86_64-linux-android) abi=x86_64 ;;
   *) echo "unknown target $target" >&2; exit 1 ;;
@@ -40,15 +41,16 @@ host_tag=$(ls "$ndk/toolchains/llvm/prebuilt" | head -1)
 mkdir -p "$out/$abi"
 find "$out" -mindepth 1 -maxdepth 1 -type d ! -name "$abi" -exec rm -rf {} +
 
-cp "$ndk/toolchains/llvm/prebuilt/$host_tag/sysroot/usr/lib/$target/libc++_shared.so" \
+lib_target=$target
+[ "$target" = armv7-linux-androideabi ] && lib_target=arm-linux-androideabi
+cp "$ndk/toolchains/llvm/prebuilt/$host_tag/sysroot/usr/lib/$lib_target/libc++_shared.so" \
   "$out/$abi/"
 
-if [ "$abi" = x86_64 ]; then
+if [ "$abi" = x86_64 ] || [ "$abi" = armeabi-v7a ]; then
   scratch=$(mktemp -d)
   trap 'rm -rf "$scratch"' EXIT
   "$root/scripts/ci/fetch.sh" onnxruntime-android "$scratch/onnxruntime-android.aar"
   unzip -qo -j "$scratch/onnxruntime-android.aar" "jni/$abi/libonnxruntime.so" -d "$out/$abi"
   [ -f "$out/$abi/libonnxruntime.so" ] || { echo "no $abi ONNX Runtime in the AAR" >&2; exit 1; }
 fi
-
 echo "The Android libraries for $target are in $out/$abi"

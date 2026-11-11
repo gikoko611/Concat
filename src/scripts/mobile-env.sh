@@ -14,15 +14,16 @@
 # the target first, and on Android scripts/android-libs.sh too.
 set -euo pipefail
 
-target=${1:?target triple: aarch64-linux-android, x86_64-linux-android or aarch64-apple-ios}
+target=${1:?target triple: armv7-linux-androideabi, aarch64-linux-android, x86_64-linux-android or aarch64-apple-ios}
 workspace=$(cd "$(dirname "$0")/.." && pwd)
 ffmpeg=$workspace/vendor/ffmpeg/$target
 [ -d "$ffmpeg/lib" ] || { echo "no FFmpeg for $target: run scripts/ffmpeg-mobile.sh $target" >&2; exit 1; }
 echo "export FFMPEG_DIR='$ffmpeg'"
 
 case "$target" in
-  aarch64-linux-android|x86_64-linux-android)
+  armv7-linux-androideabi|aarch64-linux-android|x86_64-linux-android)
     abi=arm64-v8a
+    [ "$target" = armv7-linux-androideabi ] && abi=armeabi-v7a
     [ "$target" = x86_64-linux-android ] && abi=x86_64
     libs=$workspace/vendor/android/jniLibs/$abi
     [ -f "$libs/libc++_shared.so" ] || { echo "no Android libraries for $target: run scripts/android-libs.sh $target" >&2; exit 1; }
@@ -31,7 +32,8 @@ case "$target" in
     # so ort links Microsoft's (1.28.0, the version ort is built against),
     # which android-libs.sh put beside libc++, and the APK carries it with
     # the rest of the folder.
-    if [ "$target" = x86_64-linux-android ]; then
+    # The emulator and ARMv7 use the Android AAR; arm64 keeps ort's bundled runtime.
+    if [ "$target" = x86_64-linux-android ] || [ "$target" = armv7-linux-androideabi ]; then
       echo "export ORT_LIB_LOCATION='$libs' ORT_PREFER_DYNAMIC_LINK=1"
     fi
 
