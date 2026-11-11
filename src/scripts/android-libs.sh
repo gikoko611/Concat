@@ -41,7 +41,9 @@ host_tag=$(ls "$ndk/toolchains/llvm/prebuilt" | head -1)
 mkdir -p "$out/$abi"
 find "$out" -mindepth 1 -maxdepth 1 -type d ! -name "$abi" -exec rm -rf {} +
 
-cp "$ndk/toolchains/llvm/prebuilt/$host_tag/sysroot/usr/lib/$target/libc++_shared.so" \
+lib_target=$target
+[ "$target" = armv7-linux-androideabi ] && lib_target=arm-linux-androideabi
+cp "$ndk/toolchains/llvm/prebuilt/$host_tag/sysroot/usr/lib/$lib_target/libc++_shared.so" \
   "$out/$abi/"
 
 if [ "$abi" = x86_64 ]; then
