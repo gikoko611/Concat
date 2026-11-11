@@ -32,8 +32,10 @@ case "$target" in
     # so ort links Microsoft's (1.28.0, the version ort is built against),
     # which android-libs.sh put beside libc++, and the APK carries it with
     # the rest of the folder.
-    # Use the Android AAR for the ABIs without a downloadable static ORT.
-    echo "export ORT_LIB_LOCATION='$libs' ORT_PREFER_DYNAMIC_LINK=1"
+    # The emulator and ARMv7 use the Android AAR; arm64 keeps ort's bundled runtime.
+    if [ "$target" = x86_64-linux-android ] || [ "$target" = armv7-linux-androideabi ]; then
+      echo "export ORT_LIB_LOCATION='$libs' ORT_PREFER_DYNAMIC_LINK=1"
+    fi
 
     sdk=${ANDROID_HOME:-${ANDROID_SDK_ROOT:-$HOME/Library/Android/sdk}}
     ndk=${ANDROID_NDK_HOME:-${ANDROID_NDK_ROOT:-$(ls -d "$sdk"/ndk/* 2>/dev/null | sort -V | tail -1 || true)}}
