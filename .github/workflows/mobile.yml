@@ -112,6 +112,9 @@ jobs:
           - target: aarch64-linux-android
             abi: arm64
             ship: true
+          - target: armv7-linux-androideabi
+            abi: armeabi-v7a
+            ship: true
           - target: x86_64-linux-android
             abi: x86_64
             ship: false
