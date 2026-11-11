@@ -17,13 +17,14 @@
 # cargo-apk packages the whole tree through concat-android's manifest.
 set -euo pipefail
 
-target=${1:?target triple: aarch64-linux-android or x86_64-linux-android}
+target=${1:?target triple: aarch64-linux-android, armv7-linux-androideabi or x86_64-linux-android}
 workspace=$(cd "$(dirname "$0")/.." && pwd)
 root=$(cd "$workspace/.." && pwd)
 out=${2:-$workspace/vendor/android/jniLibs}
 
 case "$target" in
   aarch64-linux-android) abi=arm64-v8a ;;
+  armv7-linux-androideabi) abi=armeabi-v7a ;;
   x86_64-linux-android) abi=x86_64 ;;
   *) echo "unknown target $target" >&2; exit 1 ;;
 esac
@@ -40,7 +41,9 @@ host_tag=$(ls "$ndk/toolchains/llvm/prebuilt" | head -1)
 mkdir -p "$out/$abi"
 find "$out" -mindepth 1 -maxdepth 1 -type d ! -name "$abi" -exec rm -rf {} +
 
-cp "$ndk/toolchains/llvm/prebuilt/$host_tag/sysroot/usr/lib/$target/libc++_shared.so" \
+lib_target=$target
+[ "$target" = armv7-linux-androideabi ] && lib_target=arm-linux-androideabi
+cp "$ndk/toolchains/llvm/prebuilt/$host_tag/sysroot/usr/lib/$lib_target/libc++_shared.so" \
   "$out/$abi/"
 
 if [ "$abi" = x86_64 ]; then

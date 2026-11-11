@@ -112,6 +112,9 @@ jobs:
           - target: aarch64-linux-android
             abi: arm64
             ship: true
+          - target: armv7-linux-androideabi
+            abi: armeabi-v7a
+            ship: true
           - target: x86_64-linux-android
             abi: x86_64
             ship: false
@@ -278,7 +281,7 @@ jobs:
         with:
           # Concat-* is what a release publishes; the emulator's APK is
           # named so it never is.
-          name: ${{ matrix.ship && 'Concat-android-arm64' || 'smoke-apk-android-x86_64' }}
+          name: ${{ matrix.ship && format('Concat-android-{0}', matrix.abi) || 'smoke-apk-android-x86_64' }}
           path: stage/*
           if-no-files-found: error
 
