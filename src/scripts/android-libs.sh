@@ -46,9 +46,11 @@ lib_target=$target
 cp "$ndk/toolchains/llvm/prebuilt/$host_tag/sysroot/usr/lib/$lib_target/libc++_shared.so" \
   "$out/$abi/"
 
+if [ "$abi" = x86_64 ] || [ "$abi" = armeabi-v7a ]; then
   scratch=$(mktemp -d)
   trap 'rm -rf "$scratch"' EXIT
   "$root/scripts/ci/fetch.sh" onnxruntime-android "$scratch/onnxruntime-android.aar"
   unzip -qo -j "$scratch/onnxruntime-android.aar" "jni/$abi/libonnxruntime.so" -d "$out/$abi"
   [ -f "$out/$abi/libonnxruntime.so" ] || { echo "no $abi ONNX Runtime in the AAR" >&2; exit 1; }
+fi
 echo "The Android libraries for $target are in $out/$abi"
