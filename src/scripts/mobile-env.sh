@@ -21,8 +21,9 @@ ffmpeg=$workspace/vendor/ffmpeg/$target
 echo "export FFMPEG_DIR='$ffmpeg'"
 
 case "$target" in
-  aarch64-linux-android|x86_64-linux-android)
+  aarch64-linux-android|armv7-linux-androideabi|x86_64-linux-android)
     abi=arm64-v8a
+    [ "$target" = armv7-linux-androideabi ] && abi=armeabi-v7a
     [ "$target" = x86_64-linux-android ] && abi=x86_64
     libs=$workspace/vendor/android/jniLibs/$abi
     [ -f "$libs/libc++_shared.so" ] || { echo "no Android libraries for $target: run scripts/android-libs.sh $target" >&2; exit 1; }
