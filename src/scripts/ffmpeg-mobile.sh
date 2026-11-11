@@ -21,7 +21,7 @@
 # the desktop bundles have no place there.
 set -euo pipefail
 
-target=${1:?target triple: aarch64-linux-android, x86_64-linux-android, aarch64-apple-ios or aarch64-apple-ios-sim}
+target=${1:?target triple: aarch64-linux-android, armv7-linux-androideabi, x86_64-linux-android, aarch64-apple-ios or aarch64-apple-ios-sim}
 workspace=$(cd "$(dirname "$0")/.." && pwd)
 out=${2:-$workspace/vendor/ffmpeg/$target}
 version=${FFMPEG_VERSION:-8.1}
