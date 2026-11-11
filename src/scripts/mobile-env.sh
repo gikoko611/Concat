@@ -14,7 +14,7 @@
 # the target first, and on Android scripts/android-libs.sh too.
 set -euo pipefail
 
-target=${1:?target triple: aarch64-linux-android, x86_64-linux-android or aarch64-apple-ios}
+target=${1:?target triple: aarch64-linux-android, armv7-linux-androideabi, x86_64-linux-android or aarch64-apple-ios}
 workspace=$(cd "$(dirname "$0")/.." && pwd)
 ffmpeg=$workspace/vendor/ffmpeg/$target
 [ -d "$ffmpeg/lib" ] || { echo "no FFmpeg for $target: run scripts/ffmpeg-mobile.sh $target" >&2; exit 1; }
