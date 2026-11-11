@@ -63,7 +63,7 @@ common=(
 )
 
 case "$target" in
-  aarch64-linux-android|x86_64-linux-android)
+  aarch64-linux-android|armv7-linux-androideabi|x86_64-linux-android)
     ndk=${ANDROID_NDK_HOME:-${ANDROID_NDK_ROOT:-}}
     if [ -z "$ndk" ]; then
       sdk=${ANDROID_HOME:-${ANDROID_SDK_ROOT:-$HOME/Library/Android/sdk}}
