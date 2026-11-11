@@ -17,7 +17,7 @@
 # cargo-apk packages the whole tree through concat-android's manifest.
 set -euo pipefail
 
-target=${1:?target triple: aarch64-linux-android or x86_64-linux-android}
+target=${1:?target triple: aarch64-linux-android, armv7-linux-androideabi or x86_64-linux-android}
 workspace=$(cd "$(dirname "$0")/.." && pwd)
 root=$(cd "$workspace/.." && pwd)
 out=${2:-$workspace/vendor/android/jniLibs}
