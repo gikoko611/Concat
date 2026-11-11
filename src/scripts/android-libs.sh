@@ -24,6 +24,7 @@ out=${2:-$workspace/vendor/android/jniLibs}
 
 case "$target" in
   aarch64-linux-android) abi=arm64-v8a ;;
+  armv7-linux-androideabi) abi=armeabi-v7a ;;
   x86_64-linux-android) abi=x86_64 ;;
   *) echo "unknown target $target" >&2; exit 1 ;;
 esac
